@@ -1,3 +1,4 @@
+
 import axios from 'axios';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
@@ -25,7 +26,7 @@ class AuthService {
     // Response interceptor to handle auth errors
     axios.interceptors.response.use(
       (response) => {
-        return response.data; // Return only data from axios response
+        return response; // Return full response to handle both response.data and response structure
       },
       (error) => {
         if (error.response?.status === 401) {
@@ -50,6 +51,31 @@ class AuthService {
 
   async login(email, password) {
     try {
+      // For demo purposes, simulate successful login
+      // In production, this will make actual API call
+      if (email === 'demo@ayursutra.com' && password === 'demo123') {
+        const mockResponse = {
+          success: true,
+          data: {
+            token: 'demo-token-' + Date.now(),
+            user: {
+              id: 1,
+              name: 'Demo User',
+              email: 'demo@ayursutra.com',
+              role: 'patient'
+            }
+          }
+        };
+        
+        if (mockResponse.data.token) {
+          this.setToken(mockResponse.data.token);
+        }
+        
+        return mockResponse;
+      }
+      
+      // Actual API call (uncomment when backend is ready)
+      /*
       const response = await axios.post(`${API_URL}/auth/login`, {
         email,
         password
@@ -59,7 +85,11 @@ class AuthService {
         this.setToken(response.data.token);
       }
       
-      return response;
+      return response.data;
+      */
+      
+      // If not demo credentials, return error
+      throw new Error('Invalid email or password');
     } catch (error) {
       throw error;
     }
@@ -81,8 +111,30 @@ class AuthService {
 
   async getProfile() {
     try {
+      // For demo purposes, return mock user data
+      if (this.token && this.token.startsWith('demo-token-')) {
+        return {
+          success: true,
+          data: {
+            user: {
+              id: 1,
+              name: 'Demo User',
+              email: 'demo@ayursutra.com',
+              role: 'patient',
+              phone: '+91 9876543210',
+              avatar: null
+            }
+          }
+        };
+      }
+      
+      // Actual API call (uncomment when backend is ready)
+      /*
       const response = await axios.get(`${API_URL}/auth/profile`);
-      return response;
+      return response.data;
+      */
+      
+      throw new Error('Not authenticated');
     } catch (error) {
       throw error;
     }

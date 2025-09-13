@@ -1,0 +1,668 @@
+{
+  "info": {
+    "name": "AyurSutra API",
+    "description": "API collection for AyurSutra Panchakarma Management System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "item": [
+        {
+          "name": "Check API Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            }
+          }
+        },
+        {
+          "name": "API Root",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": ["{{baseUrl}}"],
+              "path": [""]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.token) {",
+                  "        pm.collectionVariables.set('token', response.token);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"password\": \"Password123\",\n    \"phone\": \"+91 9876543210\",\n    \"age\": 30,\n    \"gender\": \"male\",\n    \"role\": \"patient\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.token) {",
+                  "        pm.collectionVariables.set('token', response.token);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"john.doe@example.com\",\n    \"password\": \"Password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "profile"]
+            }
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"John Updated\",\n    \"phone\": \"+91 9876543211\",\n    \"age\": 31\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "profile"]
+            }
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"currentPassword\": \"Password123\",\n    \"newPassword\": \"NewPassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/change-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "change-password"]
+            }
+          }
+        },
+        {
+          "name": "Get Practitioners",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/practitioners?page=1&limit=10&specialization=Ayurveda",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "practitioners"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "specialization",
+                  "value": "Ayurveda"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Deactivate Account",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/deactivate",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "deactivate"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Therapies",
+      "item": [
+        {
+          "name": "Get All Therapies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/therapies?page=1&limit=10&category=Shodhana&type=Vamana",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "therapies"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "category",
+                  "value": "Shodhana"
+                },
+                {
+                  "key": "type",
+                  "value": "Vamana"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Therapy Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/therapies/categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "therapies", "categories"]
+            }
+          }
+        },
+        {
+          "name": "Get Therapy Types",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/therapies/types",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "therapies", "types"]
+            }
+          }
+        },
+        {
+          "name": "Search Therapies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/therapies/search?q=detox",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "therapies", "search"],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "detox"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Recommended Therapies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/therapies/recommended?condition=stress",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "therapies", "recommended"],
+              "query": [
+                {
+                  "key": "condition",
+                  "value": "stress"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Therapy by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/therapies/60d5eca77dd870b8c8e4f123",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "therapies", "60d5eca77dd870b8c8e4f123"]
+            }
+          }
+        },
+        {
+          "name": "Create Therapy (Practitioner/Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Abhyanga Massage\",\n    \"category\": \"Shamana\",\n    \"type\": \"Abhyanga\",\n    \"description\": \"Traditional Ayurvedic oil massage for relaxation and detoxification\",\n    \"duration\": {\n        \"session\": 60,\n        \"course\": 7\n    },\n    \"price\": {\n        \"perSession\": 2500\n    },\n    \"difficulty\": \"Beginner\",\n    \"benefits\": [\n        \"Improves blood circulation\",\n        \"Reduces stress\",\n        \"Enhances skin health\"\n    ],\n    \"contraindications\": [\n        \"Fever\",\n        \"Acute inflammation\"\n    ],\n    \"preparationGuidelines\": [\n        \"Avoid heavy meals 2 hours before\",\n        \"Wear comfortable clothing\"\n    ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/therapies",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "therapies"]
+            }
+          }
+        },
+        {
+          "name": "Update Therapy",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"description\": \"Updated description for the therapy\",\n    \"price\": {\n        \"perSession\": 3000\n    }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/therapies/60d5eca77dd870b8c8e4f123",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "therapies", "60d5eca77dd870b8c8e4f123"]
+            }
+          }
+        },
+        {
+          "name": "Delete Therapy",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/therapies/60d5eca77dd870b8c8e4f123",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "therapies", "60d5eca77dd870b8c8e4f123"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Appointments",
+      "item": [
+        {
+          "name": "Get My Appointments",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/appointments?status=scheduled&page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "appointments"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "scheduled"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Available Slots",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/appointments/available-slots?practitioner=60d5eca77dd870b8c8e4f123&date=2024-01-15",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "appointments", "available-slots"],
+              "query": [
+                {
+                  "key": "practitioner",
+                  "value": "60d5eca77dd870b8c8e4f123"
+                },
+                {
+                  "key": "date",
+                  "value": "2024-01-15"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Appointment by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/appointments/60d5eca77dd870b8c8e4f456",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "appointments", "60d5eca77dd870b8c8e4f456"]
+            }
+          }
+        },
+        {
+          "name": "Create Appointment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"practitioner\": \"60d5eca77dd870b8c8e4f123\",\n    \"therapy\": \"60d5eca77dd870b8c8e4f456\",\n    \"scheduledDate\": \"2024-01-20T00:00:00.000Z\",\n    \"scheduledTime\": {\n        \"start\": \"10:00\",\n        \"end\": \"11:00\"\n    },\n    \"sessionNumber\": 1,\n    \"totalSessions\": 7,\n    \"notes\": {\n        \"patient\": \"First session for stress relief\"\n    }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/appointments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "appointments"]
+            }
+          }
+        },
+        {
+          "name": "Update Appointment",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"scheduledDate\": \"2024-01-21T00:00:00.000Z\",\n    \"scheduledTime\": {\n        \"start\": \"14:00\",\n        \"end\": \"15:00\"\n    },\n    \"status\": \"confirmed\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/appointments/60d5eca77dd870b8c8e4f456",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "appointments", "60d5eca77dd870b8c8e4f456"]
+            }
+          }
+        },
+        {
+          "name": "Cancel Appointment",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"reason\": \"Unable to attend due to personal emergency\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/appointments/60d5eca77dd870b8c8e4f456/cancel",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "appointments", "60d5eca77dd870b8c8e4f456", "cancel"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Notifications",
+      "item": [
+        {
+          "name": "Get Notifications",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "notifications"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Mark Notification as Read",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications/60d5eca77dd870b8c8e4f789/read",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "notifications", "60d5eca77dd870b8c8e4f789", "read"]
+            }
+          }
+        },
+        {
+          "name": "Mark All as Read",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications/read-all",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "notifications", "read-all"]
+            }
+          }
+        },
+        {
+          "name": "Get Unread Count",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications/unread-count",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "notifications", "unread-count"]
+            }
+          }
+        },
+        {
+          "name": "Delete Notification",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications/60d5eca77dd870b8c8e4f789",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "notifications", "60d5eca77dd870b8c8e4f789"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
